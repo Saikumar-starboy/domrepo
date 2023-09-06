@@ -10,8 +10,8 @@ function saveToLocalStorage(event){
 
     axios.post("https://crudcrud.com/api/49a4e6321dff4dc2b5605b64e02834ad/logins",obj)
     .then((response) => {
-        showUserOnScreen(response.data)
-        console.log(respose)
+       // showUserOnScreen(response.data)
+        console.log(response)
     })
     .catche((error)=>{
         console.log(error)
@@ -21,6 +21,17 @@ function saveToLocalStorage(event){
    // showUserOnScreen(obj)
 
 }
+window.addEventListener("DOMContentLoaded", () => {
+    axios.get("https://crudcrud.com/api/49a4e6321dff4dc2b5605b64e02834ad/logins")
+        .then((response) => {
+            for(var i=0;i<response.data.length;i++){
+                showUserOnScreen(response.data[i]);
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+})
 function showUserOnScreen(obj){
     const parentElem = document.getElementById('users')
     const childElem = document.createElement('li')
