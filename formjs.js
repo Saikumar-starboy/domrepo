@@ -7,8 +7,19 @@ function saveToLocalStorage(event){
         name,
         email
     }
-    localStorage.setItem(obj.email,JSON.stringify(obj))
-    showUserOnScreen(obj)
+
+    axios.post("https://crudcrud.com/api/49a4e6321dff4dc2b5605b64e02834ad/logins",obj)
+    .then((response) => {
+        showUserOnScreen(response.data)
+        console.log(respose)
+    })
+    .catche((error)=>{
+        console.log(error)
+    })
+
+   // localStorage.setItem(obj.email,JSON.stringify(obj))
+   // showUserOnScreen(obj)
+
 }
 function showUserOnScreen(obj){
     const parentElem = document.getElementById('users')
