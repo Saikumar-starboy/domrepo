@@ -4,16 +4,17 @@ function saveToLocalStorage(event){
     const email = event.target.emailid.value;
 
     const obj = {
+        
         name,
         email
     }
 
-    axios.post("https://crudcrud.com/api/49a4e6321dff4dc2b5605b64e02834ad/logins",obj)
+    axios.post("https://crudcrud.com/api/0e4cf35427d54463a2a8dee7c5cdb3c3/logins",obj)
     .then((response) => {
-       // showUserOnScreen(response.data)
+        showUserOnScreen(response.data)
         console.log(response)
     })
-    .catche((error)=>{
+    .catch((error)=>{
         console.log(error)
     })
 
@@ -22,7 +23,7 @@ function saveToLocalStorage(event){
 
 }
 window.addEventListener("DOMContentLoaded", () => {
-    axios.get("https://crudcrud.com/api/49a4e6321dff4dc2b5605b64e02834ad/logins")
+    axios.get("https://crudcrud.com/api/0e4cf35427d54463a2a8dee7c5cdb3c3/logins")
         .then((response) => {
             for(var i=0;i<response.data.length;i++){
                 showUserOnScreen(response.data[i]);
@@ -41,7 +42,7 @@ function showUserOnScreen(obj){
     deleteButton.type = 'button'
     deleteButton.value = 'Delete'
     deleteButton.onclick = () => {
-        localStorage.removeItem(obj.email)
+        deleteUser(obj._id)
         parentElem.removeChild(childElem)
     }
 
@@ -50,7 +51,7 @@ function showUserOnScreen(obj){
     editButton.value = 'Edit'
 
     editButton.onClick = () => {
-        localStorage.removeItem(obj.email)
+        localStorage.removeItem(obj._id)
         parentElem.removeChild(childElem)
         document.getElementById('name').value = obj.name;
         document.getElementId('email').value = obj.email;
@@ -60,4 +61,14 @@ function showUserOnScreen(obj){
     childElem.appendChild(deleteButton)
     childElem.appendChild(editButton)
     parentElem.appendChild(childElem)
+}
+
+function deleteUser(userId) {
+    axios.delete(`https://crudcrud.com/api/0e4cf35427d54463a2a8dee7c5cdb3c3/logins/${userId}`)
+        .then((response) => {
+            console.log('User deleted:', response.data);
+        })
+        .catch((error) => {
+            console.error('Error deleting user:', error);
+        });
 }
