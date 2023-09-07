@@ -36,31 +36,66 @@ window.addEventListener("DOMContentLoaded", () => {
 function showUserOnScreen(obj){
     const parentElem = document.getElementById('users')
     const childElem = document.createElement('li')
-    childElem.textContent = obj.name + ' - ' + obj.email 
 
     const deleteButton = document.createElement('input')
     deleteButton.type = 'button'
     deleteButton.value = 'Delete'
+    deleteButton.style.display = 'inline-block';
     deleteButton.onclick = () => {
         deleteUser(obj._id)
         parentElem.removeChild(childElem)
     }
 
-    const editButton = document.createElement('input')
-    editButton.type = 'button'
-    editButton.value = 'Edit'
+    const userInfoText = document.createElement('div');
+    userInfoText.textContent = obj.name + ' - ' + obj.email;
 
-    editButton.onClick = () => {
-        localStorage.removeItem(obj._id)
-        parentElem.removeChild(childElem)
-        document.getElementById('name').value = obj.name;
-        document.getElementId('email').value = obj.email;
-      
-    }
+    const editNameInput = document.createElement('input');
+    editNameInput.type = 'text';
+    editNameInput.value = obj.name;
+    editNameInput.style.display = 'none'; 
+
+    const editEmailInput = document.createElement('input');
+    editEmailInput.type = 'text';
+    editEmailInput.value = obj.email;
+    editEmailInput.style.display = 'none'; 
+
     
-    childElem.appendChild(deleteButton)
-    childElem.appendChild(editButton)
-    parentElem.appendChild(childElem)
+    const editButton = document.createElement('button');
+    editButton.textContent = 'Edit';
+    editButton.addEventListener('click', () => {
+        userInfoText.style.display = 'none'; 
+        editNameInput.style.display = 'inline-block'; 
+        editEmailInput.style.display = 'inline-block'; 
+        editButton.style.display = 'none'; 
+        saveButton.style.display = 'inline-block'; 
+    });
+
+    
+    const saveButton = document.createElement('button');
+    saveButton.textContent = 'Save';
+    saveButton.style.display = 'none'; 
+    saveButton.addEventListener('click', () => {
+        const updatedData = {
+            name: editNameInput.value,
+            email: editEmailInput.value,
+        };
+        editUser(obj._id, updatedData);
+        userInfoText.textContent = `${updatedData.name} - ${updatedData.email}`;
+        userInfoText.style.display = 'inline-block'; 
+        editNameInput.style.display = 'none'; 
+        editEmailInput.style.display = 'none'; 
+        editButton.style.display = 'inline-block'; 
+        saveButton.style.display = 'none'; 
+    });
+
+    
+    childElem.appendChild(userInfoText);
+    childElem.appendChild(editNameInput);
+    childElem.appendChild(editEmailInput);
+    childElem.appendChild(editButton);
+    childElem.appendChild(saveButton);
+
+    parentElem.appendChild(childElem);
 }
 
 function deleteUser(userId) {
@@ -70,5 +105,14 @@ function deleteUser(userId) {
         })
         .catch((error) => {
             console.error('Error deleting user:', error);
+        });
+}
+function editUser(userId, updatedData) {
+    axios.put(`https://crudcrud.com/api/0e4cf35427d54463a2a8dee7c5cdb3c3/logins/${userId}`,updatedData)
+        .then((response) => {
+            console.log('User Updated:', response.data);
+        })
+        .catch((error) => {
+            console.error('Error Updating user:', error);
         });
 }
